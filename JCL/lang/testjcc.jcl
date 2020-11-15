@@ -20,13 +20,13 @@
 static void song( int bottles )
 {
  while( (printf(" %d bottles of beer on the wall, %d bottles of beer.\n"
-      " Take one down and pass it around, %d bottle%s of beer on the wal
+      " Take one down and pass it around, %d bottle%s of beer on the wall.\n\n",
          bottles, bottles, bottles-1, bottles>2? "s":""), bottles > 2) )
   while( (--bottles,0) ) {}
  while( (puts(" 1 bottle of beer on the wall, 1 bottle of beer.\n"
-   " Take one down and pass it around, no more bottles of beer on the wa
+   " Take one down and pass it around, no more bottles of beer on the wall.\n\n"
       " No more bottles of beer on the wall, no more bottles of beer.\n"
-  " Go to the store and buy some more, 99 bottles of beer on the wall.")
+  " Go to the store and buy some more, 99 bottles of beer on the wall."),0) ) {}
 }
 
 int main()
