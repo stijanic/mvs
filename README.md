@@ -128,7 +128,7 @@ disconnect()
  - Getting help for screen command for usage with c3270: `Ctrl-] ?`
  
 ##  3287
-- JRP logon for printing: `logon applid=cjrp`, `PF12`, `PF1` and `PF8 (PF9)`
+- JRP logon for printing on G MSGCLASS: `logon applid=cjrp`, `PF12`, `PF1` and `PF8 (PF9)`
 - Emulates a printer and prints to PDF file on Linux with CUPS-PDF Printer: `pr3287 -trace -crlf -eojtimeout 60 "0C7@127.0.0.1:3270"`
 - LU for printing is specified in tk4-.cnf: `00C7 3287 - LU = 00C7`
 - Printing to local printer from x3270 requires to stop printer session after the job is purged so we avoid it.
