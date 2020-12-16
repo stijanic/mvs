@@ -13,8 +13,8 @@
 - [Terminal 3278](#terminal-3278)
 - [Hercules](#hercules)
 - [MVS](#mvs)
-    - [-](#-)
-    - [STOP:](#stop)
+    - [IPL](#ipl)
+    - [STOP](#stop)
     - [DASD](#dasd)
     - [DATA SETS](#data-sets)
     - [JES2](#jes2)
@@ -132,17 +132,17 @@ disconnect()
 
 # MVS
 
-### IPL
+## IPL
   - Provide this answer for automated system:
     - `/R 00,CLPA` (`CVIO, CMD=00, CMD=01, CMD=02`)
   - Provide this answer for non automated system using nonexistent (`SYS1.PARMLIB.COMMND03`):
     - `/R 00,CMD=03`
-### STOP
+## STOP
   - `/F BSPPILOT,SHUTNOW`
   - `/$PJES2`
   - `/Z EOD`
   - `/QUIESCE`
-### DASD
+## DASD
 - Display online DASDs: `/D U,DASD,ONLINE`
 - Display offline DASDs: `/D U,DASD,OFFLINE`
 - Get available device numbers/types for DASD: `/D U,DASD,OFFLINE,,999`
@@ -150,14 +150,14 @@ disconnect()
 - Initialize 3350 disk TEST01: `ICKDSF/INIT3350.JCL`
 - Vary DASD: `/V 340,ONLINE`
 - Mount DASD: `/MOUNT 340,VOL=(SL,TEST01),USE=PRIVATE`
-#### DATA SETS
+## DATA SETS
 - System configuration data set: `SYS1.PARMLIB`
 - System commands/procedures and help: `SYS1.CMDLIB` `SYS1.PROCLIB` `SYS1.HELP`
 - Additional system commands/procedures and help: `SYS2.CMDLIB` `SYS2.PROCLIB` `SYS2.HELP`
 - Many JCL examples (ALGOL, FORTRAN, GCC, COBOL, PL1, RPG, ...): `SYS2.JCLLIB`
 - IBM utilities can be found in `SYS1.LINKLIB` partitioned data set
 - RAKF configuration: `SYS1.PARMLIB(RAKFINIT)`
-### JES2
+## JES2
 - Cancel job: `/$c jXX`
 - Cancel printer output: `/$c prt3`
 - Re-configuring JES2 from MVS console:
@@ -172,26 +172,27 @@ disconnect()
   /$d u,rdrs
  ```
 - JES2 parameters file: `SYS1.JES2PARM(JES2PARM)`
-### MISC
+## MISC
 - Check what is running: `/D A,L`
 - Display users: `/DISPLAY U`
 - Send a message to a user: `/SEND 'TEST MESSAGE' HERC01`
 - Cancel session: `/CANCEL U=HERC01`
 - Reply to `*??` with: `/REPLY ??`, use `'CANCEL'` to cancel
 - Start ftpd: `/START FTPD,SRVPORT=2100` (FTPD is not working with some Hercules which are not shipped with TK4-)
-#@# MSGCLASS (SYSOUT)
+## MSGCLASS (SYSOUT)
   - `A`: `prt/prt00e.txt`
   - `Z`: `prt/prt00f.txt`
   - `G`: 3287 printer
   - `B`: `pch/pch00d.txt`
   - `X`: `prt/prt002.txt` - Held in `JES2PARM`
   - `-`: `pch/pch10d.txt` - Not defined in `JES2PARM`  
-### PASSWORDS
+## PASSWORDS
 - `HERC01/CUL8TR`
 - `HERC02/CUL8TR`
 - `HERC03/PASS4U`
 - `HERC04/PASS4U`
 - `TEST/SKYRPFXA`
+
 # TSO
 - Logon: `HERC01`
 - Reconnect: `LOGON HERC01 RECONNECT`
