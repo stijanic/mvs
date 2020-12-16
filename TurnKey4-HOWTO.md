@@ -132,11 +132,11 @@ disconnect()
 
 # MVS
 ### IPL
-- IPL answer to automated system:
+  - IPL answer to automated system:
     - `/R 00,CLPA` (`CVIO, CMD=00, CMD=01, CMD=02`)
-- IPL answer to non automated system use nonexistent (`SYS1.PARMLIB.COMMND03`):
-  - `/R 00,CMD=03`
-### STOP:
+  - IPL answer to non automated system use nonexistent (`SYS1.PARMLIB.COMMND03`):
+    - `/R 00,CMD=03`
+### STOP
   - `/F BSPPILOT,SHUTNOW`
   - `/$PJES2`
   - `/Z EOD`
