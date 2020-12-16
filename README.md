@@ -1,15 +1,15 @@
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
 
-- [Emulator](#emulator)
-    - [Linux](#linux)
-        - [Hercules](#hercules)
-            - [Configuration](#configuration)
-            - [Tools](#tools)
-            - [Commands](#commands)
-        - [HerculesStudio](#herculesstudio)
-    - [Windows](#windows)
-- [Terminal](#terminal)
+- [EMULATOR](#emulator)
+    - [LINUX](#linux)
+        - [HERCULES](#hercules)
+            - [CONFIGURATION](#configuration)
+            - [TOOLS](#tools)
+            - [COMMANDS](#commands)
+        - [HERCULESSTUDIO](#herculesstudio)
+    - [WINDOWS](#windows)
+- [TERMINAL](#terminal)
     - [3270](#3270)
     - [3287](#3287)
 - [MVS](#mvs)
@@ -22,26 +22,26 @@
     - [MSGCLASS (SYSOUT)](#msgclass-sysout)
     - [PASSWORDS](#passwords)
 - [TSO](#tso)
-    - [Commands](#commands-1)
+    - [COMMANDS](#commands-1)
     - [RFE](#rfe)
-    - [QUEUE](#queue)
     - [RPF](#rpf)
+    - [QUEUE](#queue)
 
 <!-- markdown-toc end -->
 
-# Emulator
+# EMULATOR
 
-## Linux
+## LINUX
 
-### Hercules
+### HERCULES
 
-#### Configuration
+#### CONFIGURATION
   - Configuring semi-graphical console (Esc key):  
   `~/Software/tk4-_v1.00_current/unattended/set_console_mode` (without `-d` option)
  - Redirecting A class output device to HerculesStudio printer: Comment out and copy `#000E 1403 prt/prt00e.txt ${TK4CRLF}` then change to `000E 1403 127.0.0.1:1403 sockdev`.
  - Adding a consoles:  Add `0010 3270 CONS` (and  `0011 3270 CONS`) just before the line "`INCLUDE conf/${TK4CONS:=intcons}.cnf`" or "`INCLUDE conf/${TK4CONS:=extcons}.cnf`" which defines a console, then execute once (or twice) `x3270 CONS@localhost:3270` to get access to the MVS console(s).
 
-#### Tools
+#### TOOLS
   - Submit a job to sockdev Card Reader with netcat command: `netcat -w1 localhost 3505 < restore.jcl`
   - Create a new DASD: `dasdinit -a -z test00.340 3350 TEST00`
   - Create DASD from XMIT files (trailing CR in ctl file is mandatory): `dasdload -a -z revhelp.ctl REVH00 3`
@@ -53,7 +53,7 @@
   - Print output: ``tail -f prt00e.txt``
   - Use ftp from Linux: `ftp localhost 2100`
 
-#### Commands
+#### COMMANDS
  - Attach a disk: `ATTACH 340 3350 DASD/TEST01.340`
  - Load a tape: `DEVINIT 0480 TAPES/VS2START.HET`
  - Run a job : `DEVINIT 000C JCL/IEBGENER.JCL` - USER and PASSWORD must be supplied in JCL because of RAKF
@@ -62,7 +62,7 @@
  - Adding a console : `ATTACH 010 3270 CONS`
  - To issue and MVS commands from Hercules prefix it with `/`. That's not required from MVS console!
 
-### HerculesStudio
+### HERCULESSTUDIO
 
   - Load environment variables: `source ~/.HerculesStudio`
   - Be sure to configure Hercules' Directory to `<NONE>`
@@ -77,7 +77,7 @@ export LD_LIBRARY_PATH=$HOME/Software/tk4-_v1.00_current/hercules/linux/64/lib/h
 #export HERCULES_RC=$HOME/Software/tk4-_v1.00_current/scripts/ipl.rc - Not used, manual IPL...
 ```
 
-## Windows
+## WINDOWS
 - HercGUI - Rename `ipl.rc` to `hercules.rc` and place it in Configuration Files directory which has to be the "target dir"
 - HercPrt - Printing using `mvs38j-33lines.ini` configuration
 - TCPIP add Microsoft loopback with hdwwiz:
@@ -87,7 +87,7 @@ export LD_LIBRARY_PATH=$HOME/Software/tk4-_v1.00_current/hercules/linux/64/lib/h
  ```
  - Submitting jobs via the socket reader (HercGUI), USER and PASSWORD fields in JOB statement are mandatory: `hercrdr.exe 127.0.0.1:3505 restore.jcl`
 
-# Terminal
+# TERMINAL
 
 ##  3270
  - Cancel everything: `PA1`
@@ -207,7 +207,7 @@ disconnect()
 
 # TSO
 
-## Commands
+## COMMANDS
 - Cancel `PF3`
 - Logon: `HERC01`
 - Reconnect: `LOGON HERC01 RECONNECT`
@@ -249,11 +249,6 @@ disconnect()
 - Go to menu option X: =X
 - Go to start menu: =bye
 
-## QUEUE
-- Get all jobs: STATUS *
-- S (command): S[TATUS]/C[ANCEL]/P[URGE]/O[UTPUT] 
-- Q (class): A/Z/G/B/X
-
 ## RPF
 - B - browse
 - C - catalog
@@ -265,3 +260,8 @@ disconnect()
 - U - uncatalog
 - V - view
 - Z - compress
+
+## QUEUE
+- Get all jobs: STATUS *
+- S (command): S[TATUS]/C[ANCEL]/P[URGE]/O[UTPUT] 
+- Q (class): A/Z/G/B/X
