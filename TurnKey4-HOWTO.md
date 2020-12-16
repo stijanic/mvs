@@ -3,15 +3,16 @@
 
 - [System Configuration and Tips](#system-configuration-and-tips)
     - [Linux](#linux)
-        - [HerculesStudio:](#herculesstudio)
-        - [$HOME/.HerculesStudio:](#homeherculesstudio)
+        - [Hercules](#hercules)
+        - [HerculesStudio](#herculesstudio)
+        - [$HOME/.HerculesStudio](#homeherculesstudio)
         - [Tools](#tools)
     - [Windows](#windows)
-- [Config (tk4-.cnf)](#config-tk4-cnf)
-- [Console (???):](#console-)
 - [Terminal 3270](#terminal-3270)
 - [Terminal 3278](#terminal-3278)
-- [Hercules](#hercules)
+- [Hercules](#hercules-1)
+- [Config (tk4-.cnf)](#config-tk4-cnf)
+- [Console](#console)
 - [MVS](#mvs)
     - [IPL](#ipl)
     - [STOP](#stop)
@@ -30,14 +31,16 @@
 
 # System Configuration and Tips
 ## Linux
-### HerculesStudio:
+### Hercules
+  - Configuring semi-graphical console (Esc key): `~/Software/tk4-_v1.00_current/unattended/set_console_mode` (without `-d` option)
+
+### HerculesStudio
   - Load environment variables: `source ~/.HerculesStudio`
   - Be sure to configure Hercules' Directory to `<NONE>`
   - Configuration Directory = `$HOME/Software/tk4-_v1.00_current/conf`
   - Logs Directory = `$HOME/Software/tk4-_v1.00_current/log`
   - Don't use script `scripts/ipl.rc` to IPL as it goes wild quite often, use manual IPL...
-  - Configuring semi-graphical console (Esc key): `~/Software/tk4-_v1.00_current/unattended/set_console_mode` (without `-d` option)
-### $HOME/.HerculesStudio:
+### $HOME/.HerculesStudio
   - `export PATH=$HOME/Software/tk4-_v1.00_current/hercules/linux/64/bin:$PATH`
   - `export LD_LIBRARY_PATH=$HOME/Software/tk4-_v1.00_current/hercules/linux/64/lib:$LD_LIBRARY_PATH`
   - `export LD_LIBRARY_PATH=$HOME/Software/tk4-_v1.00_current/hercules/linux/64/lib/hercules:$LD_LIBRARY_PATH`
@@ -56,30 +59,12 @@
 ## Windows
 - HercGUI - Rename `ipl.rc` to `hercules.rc` and place it in Configuration Files directory which has to be the "target dir"
 - HercPrt - Printing using `mvs38j-33lines.ini` configuration
-- TCPIP??? add Microsoft loopback with hdwwiz:
+- TCPIP add Microsoft loopback with hdwwiz:
  ```
  attach E20 3088 CTCI-W32 192.168.0.25 192.168.0.15
  attach E21 3088 CTCI-W32 192.168.0.25 192.168.0.15
  ```
  - Submitting jobs via the socket reader (HercGUI), USER and PASSWORD fields in JOB statement are mandatory: `hercrdr.exe 127.0.0.1:3505 restore.jcl`
-
-# Config (tk4-.cnf)
-- Add one console (`0010 3270` // `0011 3270`) just before the line "`INCLUDE conf/${TK4CONS:=intcons}.cnf`" in `tk4-.cnf` and don't use mvs script to IPL, then execute: `x3270 localhost:3270`
-- Redirecting A class output device to a socket in config file: `#000E 1403 prt/prt00e.txt ${TK4CRLF}` => `000E 1403 127.0.0.1:1403 sockdev`
-
-# Console (???):
- 
-Hercules - `ATTACH 010 3270 CONS`
-x3270/tn3270 -
-  `CONS@127.0.0.1:3270` (x3270)
-  `127.0.0.1:3270 LUNAME=CONS` (tn3270)
-MVS - `/V 010,CONSOLE,AUTH=ALL`
-
-- Connect/disconnect terminal:
- ```
-/V NET,ACT,ID=CUU0C2
-/V NET,INACT,ID=CUU0C2
- ```
 
 # Terminal 3270
  - Cancel everything: `PA1`
@@ -116,6 +101,7 @@ disconnect()
 - File transfer parameters: `fixed 80/3120`
 - Printing the session in x3scr* files, `/tmp` on Linux and Desktop on Windows
  - Use option `x3270 -oversize 90x45` to display all characters in RFE/RPF or set it in .Xresources: `x3270.oversize: 90x45`
+
 # Terminal 3278
 - JRP logon for printing: `logon applid=cjrp`, `PF12`, `PF1` and `PF8 (PF9)`
 - LU for printing is specified in tk4-.cnf: `00C7 3287 - LU = 00C7`
@@ -129,27 +115,41 @@ disconnect()
  - Run a job : `DEVINIT 000C JCL/IEBGENER.JCL` - USER and PASSWORD must be supplied in JCL because of RAKF
  - Force stop: `SCRIPT SCRIPTS/SHUTDOWN`
  - Start IPL from device 148: `IPL 148`
+ - To issue and MVS commands from Hercules prefix it with `/`. That's not required from MVS console!
+
+# Config (tk4-.cnf)
+- Adding a consoles:  Add `0010 3270` and  `0011 3270` just before the line "`INCLUDE conf/${TK4CONS:=intcons}.cnf`" or "`INCLUDE conf/${TK4CONS:=extcons}.cnf`" which defines consoles. Don't use mvs script to IPL, then execute: `x3270 localhost:3270` and do the IPL.
+- Redirecting A class output device to HerculesStudio printer: Comment out and copy `#000E 1403 prt/prt00e.txt ${TK4CRLF}` then change to `000E 1403 127.0.0.1:1403 sockdev`.
+
+# Console
+- Starting an MVS console directly from Hercules:
+1. `ATTACH 010 3270 CONS` - Hercules 
+2. `CONS@127.0.0.1:3270` - x3270 or `127.0.0.1:3270 LUNAME=CONS` - tn3270
+3. `V 010,CONSOLE,AUTH=ALL` - MVS
+4. If console is 'frozen' press PF11
+- Connect/disconnect terminal: `V NET,ACT,ID=CUU0C2` `V NET,INACT,ID=CUU0C2`
 
 # MVS
-
 ## IPL
   - Provide this answer for automated system:
-    - `/R 00,CLPA` (`CVIO, CMD=00, CMD=01, CMD=02`)
+    - `R 00,CMD=02` (`CLPA, CVIO, CMD=00, CMD=01, CMD=02`)
   - Provide this answer for non automated system using nonexistent (`SYS1.PARMLIB.COMMND03`):
-    - `/R 00,CMD=03`
+    - `R 00,CMD=03`
 ## STOP
-  - `/F BSPPILOT,SHUTNOW`
-  - `/$PJES2`
-  - `/Z EOD`
-  - `/QUIESCE`
+  ```
+  F BSPPILOT,SHUTNOW
+  $PJES2
+  Z EOD
+  QUIESCE
+  ```
 ## DASD
-- Display online DASDs: `/D U,DASD,ONLINE`
-- Display offline DASDs: `/D U,DASD,OFFLINE`
-- Get available device numbers/types for DASD: `/D U,DASD,OFFLINE,,999`
+- Display online DASDs: `D U,DASD,ONLINE`
+- Display offline DASDs: `D U,DASD,OFFLINE`
+- Get available device numbers/types for DASD: `D U,DASD,OFFLINE,,999`
 - Add a new DASD in `SYS1.PARMLIB(VATLST00)` : `TEST01,1,2,3350 VOL TEST01 DEVICE 340 FILE test01.340`
 - Initialize 3350 disk TEST01: `ICKDSF/INIT3350.JCL`
-- Vary DASD: `/V 340,ONLINE`
-- Mount DASD: `/MOUNT 340,VOL=(SL,TEST01),USE=PRIVATE`
+- Vary DASD: `V 340,ONLINE`
+- Mount DASD: `MOUNT 340,VOL=(SL,TEST01),USE=PRIVATE`
 ## DATA SETS
 - System configuration data set: `SYS1.PARMLIB`
 - System commands/procedures and help: `SYS1.CMDLIB` `SYS1.PROCLIB` `SYS1.HELP`
@@ -158,27 +158,27 @@ disconnect()
 - IBM utilities can be found in `SYS1.LINKLIB` partitioned data set
 - RAKF configuration: `SYS1.PARMLIB(RAKFINIT)`
 ## JES2
-- Cancel job: `/$c jXX`
-- Cancel printer output: `/$c prt3`
+- Cancel job: `$C JXX`
+- Cancel printer output: `$C PRT3`
 - Re-configuring JES2 from MVS console:
-  - `/S JES2,,,PARM='COLD,NOREQ'`
-  - `/S JES2,PARM='COLD,FORMAT'`
+  - `S JES2,,,PARM='COLD,NOREQ'`
+  - `S JES2,PARM='COLD,FORMAT'`
 - Execute a JES2 command:
  ```
-  /$d a
-  /$d i
-  /$d u,prts
-  /$d u,puns
-  /$d u,rdrs
+  $D A
+  $D I
+  $D U,PRTS
+  $D U,PUNS
+  $D U,RDRS
  ```
 - JES2 parameters file: `SYS1.JES2PARM(JES2PARM)`
 ## MISC
-- Check what is running: `/D A,L`
-- Display users: `/DISPLAY U`
-- Send a message to a user: `/SEND 'TEST MESSAGE' HERC01`
-- Cancel session: `/CANCEL U=HERC01`
-- Reply to `*??` with: `/REPLY ??`, use `'CANCEL'` to cancel
-- Start ftpd: `/START FTPD,SRVPORT=2100` (FTPD is not working with some Hercules which are not shipped with TK4-)
+- Check what is running: `D A,L`
+- Display users: `DISPLAY U`
+- Send a message to a user: `SEND 'TEST MESSAGE' HERC01`
+- Cancel session: `CANCEL U=HERC01`
+- Reply to `*??` with: `REPLY ??`, use `'CANCEL'` to cancel
+- Start ftpd: `START FTPD,SRVPORT=2100` (FTPD is not working with some Hercules which are not shipped with TK4-)
 ## MSGCLASS (SYSOUT)
   - `A`: `prt/prt00e.txt`
   - `Z`: `prt/prt00f.txt`
