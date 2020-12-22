@@ -105,7 +105,7 @@ export LD_LIBRARY_PATH=$HOME/Software/tk4-_v1.00_current/hercules/linux/64/lib/h
    x3270if -t 9999 "$X";
  done
  ```
- - Script for logon (actions.txt): 
+ - Script for logon (actions.txt):
  ```
 connect(127.0.0.1:3270)
 pf(3)
@@ -126,12 +126,12 @@ disconnect()
  ```
  - Running curses version of terminal emulator: `c3270 127.0.0.1:3270`
  - Getting help for screen command for usage with c3270: `Ctrl-] ?`
- 
+
 ##  3287
 - JRP logon for printing on G MSGCLASS: `logon applid=cjrp`, `PF12`, `PF1` and `PF8 (PF9)`
 - Emulates a printer and prints to PDF file on Linux with CUPS-PDF Printer: `pr3287 -trace -crlf -eojtimeout 60 "0C7@127.0.0.1:3270"`
 - LU for printing is specified in tk4-.cnf: `00C7 3287 - LU = 00C7`
-- Printing to local printer from x3270 requires to stop printer session after the job is purged so we avoid it.
+- Printing to local printer from x3270 (runs pr3287 in background) requires to stop printer session after the job is purged so we avoid it.
 
 # MVS
 
@@ -188,14 +188,15 @@ disconnect()
 - Reply to `*??` with: `REPLY ??`, use `'CANCEL'` to cancel
 - Start ftpd: `START FTPD,SRVPORT=2100` (FTPD is not working with some Hercules which are not shipped with TK4-)
 - Give authorization for console: `V 010,CONSOLE,AUTH=ALL`
- 
+
 ## MSGCLASS (SYSOUT)
   - `A`: `prt/prt00e.txt`
   - `Z`: `prt/prt00f.txt`
   - `G`: 3287 printer
   - `B`: `pch/pch00d.txt`
   - `X`: `prt/prt002.txt` - Held in `JES2PARM`
-  - `-`: `pch/pch10d.txt` - Not defined in `JES2PARM`  
+  - `-`: `pch/pch10d.txt` - Not defined in `JES2PARM`
+  - `H`: HELD
 
 ## PASSWORDS
 - `HERC01/CUL8TR`
@@ -247,6 +248,9 @@ disconnect()
 ## RFE
 - Go to menu option X: =X
 - Go to start menu: =bye
+- QUEUE: Go to UTILITIES/OUTLIST (3.8)
+  - Get all jobs: STATUS *
+  - S (command): S[TATUS]/C[ANCEL]/P[URGE]/O[UTPUT] / Q (class): A/Z/G/B/X/H
 
 ## RPF
 - B - browse
@@ -259,8 +263,3 @@ disconnect()
 - U - uncatalog
 - V - view
 - Z - compress
-
-## QUEUE
-- Get all jobs: STATUS *
-- S (command): S[TATUS]/C[ANCEL]/P[URGE]/O[UTPUT] 
-- Q (class): A/Z/G/B/X
