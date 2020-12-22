@@ -38,8 +38,9 @@
 #### CONFIGURATION
   - Configuring semi-graphical console (Esc key):  
   `~/Software/tk4-_v1.00_current/unattended/set_console_mode` (without `-d` option)
- - Redirecting A class output device to HerculesStudio printer: In tk4-.cnf comment out and copy `#000E 1403 prt/prt00e.txt ${TK4CRLF}` then change to `000E 1403 127.0.0.1:1403 sockdev`.
- - Adding a consoles:  In tk4-.cnf add `0010 3270 CONS` (and  `0011 3270 CONS`) just before the line "`INCLUDE conf/${TK4CONS:=intcons}.cnf`" or "`INCLUDE conf/${TK4CONS:=extcons}.cnf`" which defines a console, then execute once (or twice) `x3270 CONS@localhost:3270` to get access to the MVS console(s).
+  - In semi-graphical mode press `ESC` and then `?` to get help.
+  - Redirecting A class output device to HerculesStudio printer: In tk4-.cnf comment out and copy `#000E 1403 prt/prt00e.txt ${TK4CRLF}` then change to `000E 1403 127.0.0.1:1403 sockdev`.
+  - Adding a consoles:  In tk4-.cnf add `0010 3270 CONS` (and  `0011 3270 CONS`) just before the line "`INCLUDE conf/${TK4CONS:=intcons}.cnf`" or "`INCLUDE conf/${TK4CONS:=extcons}.cnf`" which defines a console, then execute once (or twice) `x3270 CONS@localhost:3270` to get access to the MVS console(s).
 
 #### TOOLS
   - Submit a job to sockdev Card Reader with netcat command: `netcat -w1 localhost 3505 < restore.jcl`
