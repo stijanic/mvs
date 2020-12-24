@@ -153,7 +153,7 @@ disconnect()
 - Give authorization for console: `V 010,CONSOLE,AUTH=ALL`
 
 ## IPL
-- Provide this answer for automated system: `R 00,CMD=00` (`CLPA, CVIO, CMD=00, CMD=01, CMD=02`)
+- Provide this answer for automated system: `R 00,CMD=00` (`CLPA`, `CVIO`, `CMD=00`, `CMD=01`, `CMD=02`)
 - Provide this answer for non automated system using nonexistent (`SYS1.PARMLIB.COMMND03`): `R 00,CMD=03`
 
 ## STOP
