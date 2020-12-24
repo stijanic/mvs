@@ -13,19 +13,18 @@
     - [3270](#3270)
     - [3287](#3287)
 - [MVS](#mvs)
+    - [COMMANDS](#commands-1)
     - [IPL](#ipl)
     - [STOP](#stop)
     - [DASD](#dasd)
     - [DATA SETS](#data-sets)
     - [JES2](#jes2)
-    - [MISC](#misc)
     - [MSGCLASS (SYSOUT)](#msgclass-sysout)
     - [PASSWORDS](#passwords)
 - [TSO](#tso)
-    - [COMMANDS](#commands-1)
+    - [KEYS](#keys)
+    - [COMMANDS](#commands-2)
     - [RFE](#rfe)
-    - [RPF](#rpf)
-    - [QUEUE](#queue)
 
 <!-- markdown-toc end -->
 
@@ -46,8 +45,9 @@
 - Submit a job to sockdev Card Reader with netcat command: `netcat -w1 localhost 3505 < restore.jcl`
 - Create a new DASD: `dasdinit -a -z test00.340 3350 TEST00`
 - Create DASD from XMIT files (trailing CR in ctl file is mandatory): `dasdload -a -z revhelp.ctl REVH00 3`
-- Print content of member of partitioned dataset: `dasdcat -i REVH00 "GPRICE.REVIEW.HELP/FSHELP:a"`
-- Unload members from partitioned dataset: `dasdpdsu REVH00 GPRICE.REVIEW.HELP ascii`
+- List VTOC of DASD: `dasdls test00.340`
+- Print content of member of Partitioned Data Set: `dasdcat -i REVH00 "GPRICE.REVIEW.HELP/FSHELP:a"`
+- Unload members from Partitioned Data Set: `dasdpdsu REVH00 GPRICE.REVIEW.HELP ascii`
 - Print map of AWS tape: `tapemap ./tapes/HERCULES.0000XX.het`
 - Create a new HET volume: `hetinit ./tapes/HERCULES.0000XX.het 0000XX HERC01`
 - Print map of HET tape: `hetmap ./tapes/HERCULES.0000XX.het`
@@ -95,8 +95,8 @@ attach E21 3088 CTCI-W32 192.168.0.25 192.168.0.15
 - Use `CONS@localhost:3270` with x3270 or `localhost:3270 LUNAME=CONS` with tn3270 to connect to a console
 - File transfer parameters: `fixed 80/3120`
 - Use option `x3270 -oversize 90x45` to display 90 characters in TSO or set it in .Xresources: `x3270.oversize: 90x45`
-- Printing the session in x3scr* files, `/tmp` on Linux and Desktop on Windows
-- Running scripts version (actions) of terminal emulator - http://x3270.bgp.nu/x3270-script.html: `s3270`
+- Printing the session in `x3scr*` files, `/tmp` on Linux and Desktop on Windows
+- Running scripts version (actions) of terminal emulator: `s3270`
 - Running a session with script listener: `x3270 -scriptport 9999`
 - Executing a script through running `x3270`:
  ```
@@ -135,6 +135,16 @@ disconnect()
 
 # MVS
 
+## COMMANDS
+- Reply to `*??` with: `REPLY ??`, use `'CANCEL'` to cancel
+- Check what is running: `D A,L`
+- Display users: `DISPLAY U`
+- Send a message to a user: `SEND 'TEST MESSAGE' HERC01`
+- Cancel session: `CANCEL U=HERC01`
+- Start FTPD: `START FTPD,SRVPORT=2100` (FTPD is not working with some Hercules which are not shipped with TK4-)
+- Connect/disconnect terminal: `V NET,ACT,ID=CUU0C2` / `V NET,INACT,ID=CUU0C2`
+- Give authorization for console: `V 010,CONSOLE,AUTH=ALL`
+
 ## IPL
 - Provide this answer for automated system: `R 00,CMD=02` (`CLPA, CVIO, CMD=00, CMD=01, CMD=02`)
 - Provide this answer for non automated system using nonexistent (`SYS1.PARMLIB.COMMND03`): `R 00,CMD=03`
@@ -171,13 +181,14 @@ disconnect()
 - System commands/procedures and help: `SYS1.CMDLIB` `SYS1.PROCLIB` `SYS1.HELP`
 - Additional system commands/procedures and help: `SYS2.CMDLIB` `SYS2.PROCLIB` `SYS2.HELP`
 - Many JCL examples (ALGOL, FORTRAN, GCC, COBOL, PL1, RPG, ...): `SYS2.JCLLIB`
-- IBM utilities can be found in `SYS1.LINKLIB` partitioned data set
+- IBM utilities can be found in Partitioned Data Set: `SYS1.LINKLIB(*)`
 - RAKF configuration: `SYS1.PARMLIB(RAKFINIT)`
 
 ## JES2
 - Cancel job: `$C JXX`
 - Cancel printer output: `$C PRT3`
-- Re-configuring JES2 from MVS console:
+- Stop JES2: `$PJES `
+- Re-configuring JES2:
   - `S JES2,,,PARM='COLD,NOREQ'`
   - `S JES2,PARM='COLD,FORMAT'`
 - Execute a JES2 command:
@@ -189,16 +200,6 @@ disconnect()
   $D U,RDRS
   ```
 - JES2 parameters file: `SYS1.JES2PARM(JES2PARM)`
-
-## MISC
-- Check what is running: `D A,L`
-- Connect/disconnect terminal: `V NET,ACT,ID=CUU0C2` / `V NET,INACT,ID=CUU0C2`
-- Display users: `DISPLAY U`
-- Send a message to a user: `SEND 'TEST MESSAGE' HERC01`
-- Cancel session: `CANCEL U=HERC01`
-- Reply to `*??` with: `REPLY ??`, use `'CANCEL'` to cancel
-- Start ftpd: `START FTPD,SRVPORT=2100` (FTPD is not working with some Hercules which are not shipped with TK4-)
-- Give authorization for console: `V 010,CONSOLE,AUTH=ALL`
 
 ## MSGCLASS (SYSOUT)
 - `A`: `prt/prt00e.txt`
@@ -218,22 +219,33 @@ disconnect()
 
 # TSO
 
+## KEYS
+- HELP `PF1`
+- START `PF2`
+- END `PF3` - Back
+- TSO `PF4`
+- RFIND `PF4`
+- RCHANGE `PF4`
+- UP `PF7`
+- DOWN `PF8`
+- LEFT `PF10` 
+- RIGHT `PF11`
+- RECALL `PF12` - History
+
 ## COMMANDS
-- Cancel `PF3`
 - Logon: `HERC01`
 - Reconnect: `LOGON HERC01 RECONNECT`
 - Start TSOAPPLS: `TSOAPPLS`
 - List volumes: `LISTVOL`
 - List catalogue: `LISTCAT`
-- List VTOC of DASD: `DASDLS REVH00`
 - Set prefix: `PROFILE PREFIX(HERC01)`
 - Remove prefix: `PROFILE NOPREFIX`
 - List all Data Sets in catalogue: `LISTCAT CATALOG('SYS1.UCAT.TSO') ALL`
 - List details about Data Set: `LISTCAT ENTRIES('HERC01.IEBGENE3.JCL') ALL`
 - List all JCL Data Sets in HERC01: `LISTDS 'HERC01.*.JCL'`
-- List of partitioned Data Sets TSO commands: `LISTDS 'SYS2.CMDLIB' MEMBERS`
-- List of partitioned Data Sets TSO helps: `LISTDS 'SYS2.HELP' MEMBERS`
-- List of partitioned Data Sets TSO procedures: `LISTDS 'SYS2.PROCLIB' MEMBERS`
+- List of Partitioned Data Sets TSO commands: `LISTDS 'SYS2.CMDLIB' MEMBERS`
+- List of Partitioned Data Sets TSO helps: `LISTDS 'SYS2.HELP' MEMBERS`
+- List of Partitioned Data Sets TSO procedures: `LISTDS 'SYS2.PROCLIB' MEMBERS`
 - List the content of the Data Set: `LIST 'HERC01.IEBGENE3.JCL'`
 - Rename Data Set: `RENAME 'HERC01.COMPILE2.JCL' 'HERC01.COMPILE2.JCK'`
 - Delete Data Set: `DELETE 'HERC01.COMPILE2.JCL'`
@@ -259,14 +271,14 @@ disconnect()
 ## RFE
 - DSLIST (3.4):
   - `B` - browse
-  - `C` - catalog
+  - `C` - catalogue
   - `D` - delete
   - `E` - edit
   - `I` - info
   - `L` - list
   - `M` - member
-  - `R` - rename
-  - `U` - uncatalog
+  - `R`/`N` - rename
+  - `U` - uncatalogue
   - `V` - view
   - `Z` - compress
 - OUTLIST (3.8):
