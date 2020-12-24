@@ -59,14 +59,14 @@
   - Send a file: `put TESTASM`
   
 #### COMMANDS
+- Start IPL from device 148: `IPL 148`
 - Show list of devices: `DEVLIST`
 - Attach a disk: `ATTACH 340 3350 dasd/test00.340`
 - Load a tape: `DEVINIT 0480 tapes/HERCULES.000012.het`
-- Run a job : `DEVINIT 000C jcl/iehdasdr/restore.jcl` - USER and PASSWORD must be supplied in JCL because of RAKF
-- Force stop: `SCRIPT SCRIPTS/SHUTDOWN`
-- Start IPL from device 148: `IPL 148`
+- Run a job : `DEVINIT 000C JCL/iehdasdr/restore.jcl` - USER and PASSWORD must be supplied in JCL because of RAKF
 - Adding a console : `ATTACH 010 3270 CONS`
-- To issue and MVS commands from Hercules prefix it with `/`. That's not required from MVS console!
+- TK4- stop script: `SCRIPT SCRIPTS/SHUTDOWN`
+- To issue an MVS commands from Hercules prefix it with `/`. That's not required from MVS console!
 
 ### HERCULESSTUDIO
 - Load environment variables: `source ~/.HerculesStudio`
@@ -153,8 +153,8 @@ disconnect()
 - Give authorization for console: `V 010,CONSOLE,AUTH=ALL`
 
 ## IPL
-- Provide this answer for automated system: `R 00,CMD=00` (`CLPA`, `CVIO`, `CMD=00`, `CMD=01`, `CMD=02`)
-- Provide this answer for non automated system using nonexistent (`SYS1.PARMLIB.COMMND03`): `R 00,CMD=03`
+- Answer for full automated system: `R 00,CMD=00` (`CLPA`, `CVIO`, `CMD=00`, `CMD=01`, `CMD=02`)
+- Answer for non automated system using nonexistent (`SYS1.PARMLIB.COMMND03`): `R 00,CMD=03`
 
 ## STOP
 - Issues these commands one by one in order to stop the system:
