@@ -53,10 +53,15 @@
 - Print map of HET tape: `hetmap ./tapes/HERCULES.0000XX.het`
 - Print output: ``tail -f prt00e.txt``
 - Use ftp from Linux: `ftp localhost 2100`
-
+  - Be sure that Partitioned Data Set is catalogued and not busy.
+  - Change directory to Partitioned Data Set: `cd HERC01.LANG.CNTL`
+  - Change to ASCII transfer mode: `ascii`
+  - Send a file: `put TESTASM`
+  
 #### COMMANDS
+- Show list of devices: `DEVLIST`
 - Attach a disk: `ATTACH 340 3350 dasd/test00.340`
-- Load a tape: `DEVINIT 0480 tapes/HERCULES.000011.het`
+- Load a tape: `DEVINIT 0480 tapes/HERCULES.000012.het`
 - Run a job : `DEVINIT 000C jcl/iehdasdr/restore.jcl` - USER and PASSWORD must be supplied in JCL because of RAKF
 - Force stop: `SCRIPT SCRIPTS/SHUTDOWN`
 - Start IPL from device 148: `IPL 148`
@@ -141,7 +146,9 @@ disconnect()
 - Display users: `DISPLAY U`
 - Send a message to a user: `SEND 'TEST MESSAGE' HERC01`
 - Cancel session: `CANCEL U=HERC01`
-- Start FTPD: `START FTPD,SRVPORT=2100` (FTPD is not working with some Hercules which are not shipped with TK4-)
+- Start FTPD: `START FTPD,SRVPORT=2100`
+  - FTPD is not working with some Hercules which are not shipped with TK4-
+  - Stop it manually: `CANCEL FTPD`
 - Connect/disconnect terminal: `V NET,ACT,ID=CUU0C2` / `V NET,INACT,ID=CUU0C2`
 - Give authorization for console: `V 010,CONSOLE,AUTH=ALL`
 
